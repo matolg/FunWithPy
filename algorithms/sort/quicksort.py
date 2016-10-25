@@ -21,31 +21,63 @@
 #  * complexity: B: O(n*log(n))-A: O(n*log(n))-W: O(n^2) (when already sorted)
 
 
-def quicksort(a, lo, hi):
+import random
+
+
+def lomuto_quicksort(a, lo, hi):
     if lo < hi:
         p = lomuto_partition(a, lo, hi)
-        quicksort(a, lo, p - 1)
-        quicksort(a, p + 1, hi)
+        lomuto_quicksort(a, lo, p - 1)
+        lomuto_quicksort(a, p + 1, hi)
 
 
 def lomuto_partition(a, lo, hi):
-    pivot = a[hi]  # always chose upper bound
+    p = a[hi]  # always choose upper bound
     i = lo         # swap point
     for j in range(lo, hi):
-        if a[j] <= pivot:
+        if a[j] <= p:
             swap(a, i, j)
-            i = i + 1
+            i += 1
     swap(a, i, hi)
     return i
 
 
+def hoare_quicksort(a, lo, hi):
+    if lo < hi:
+        p = hoare_partition(a, lo, hi)
+        hoare_quicksort(a, lo, p)
+        hoare_quicksort(a, p + 1, hi)
+
+
+def hoare_partition(a, lo, hi):
+    p = a[lo]
+    i = lo
+    j = hi
+    while True:
+        while a[i] < p:
+            i += 1
+        while a[j] > p:
+            j -= 1
+        if i >= j:
+            return j
+        swap(a, i, j)
+
+
 def swap(a, i1, i2):
+    global swaps
     c = a[i1]
     a[i1] = a[i2]
     a[i2] = c
+    swaps = swaps + 1
 
 
-unsorted = [2, 1, 2, 5, 4]
-quicksort(unsorted, 0, len(unsorted) - 1)
+unsorted = [random.randint(0, 1000) for r in range(1000)]
+unsorted1 = list(unsorted)
 
-print(', '.join(str(x) for x in unsorted))
+swaps = 0
+lomuto_quicksort(unsorted, 0, len(unsorted) - 1)
+print("Lomuto sort swaps count = " + str(swaps))
+
+swaps = 0
+hoare_quicksort(unsorted, 0, len(unsorted) - 1)
+print("Hoare sort swaps count = " + str(swaps))
