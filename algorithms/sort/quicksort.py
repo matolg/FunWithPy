@@ -54,10 +54,14 @@ def hoare_partition(a, lo, hi):
     i = lo
     j = hi
     while True:
-        while a[i] < p:
+        while True:
             i += 1
-        while a[j] > p:
+            if (a[i] >= p):
+                break
+        while True:
             j -= 1
+            if (a[j] <= p):
+                break
         if i >= j:
             return j
         swap(a, i, j)
